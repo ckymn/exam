@@ -3,11 +3,20 @@ const Schema = mongoose.Schema;
 
 // schema olusturulacak dokumanin yapisini belirler
 const MessageSchema = new Schema({
-  user: {
-    type: ObjectId,
-    unique: true,
+  name: {
+    type: String,
+    required: true,
   },
-  text: String,
+  email: {
+    type: String,
+    required: true,
+  },
+  gender: String,
+  phone: String,
+  create_date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // olusturulan modeli kullanilabilir hale getirmek

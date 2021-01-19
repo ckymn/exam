@@ -3,32 +3,31 @@ const Message = require("../models/message");
 
 const router = express.Router();
 
+router.post("/message/send", (req, res) => {
+  const sms = new Message(req.body);
+  sms
+    .save()
+    .then((item) => {
+      res.send("sms veritabanina kaydedildi.");
+    })
+    .catch((err) => {
+      res.status(400).send("sms veritabanina kaydedilmedi?");
+    });
+});
+
 router.get("/message/with_user", (req, res) => {
-  res.render("auth/register");
+  const sms = Message.find((data) => data.id === parseInt(req.params.id));
+  sms 
+    ? res.json(sms) 
+    : res.status(404).json({ message: "withUser not found" });
 });
 
 router.get("/message/convos", (req, res, next) => {
-  res.render("auth/login");
+  const convos = Message.find((data) => data.id === parseInt(req.params.id));
+  convos
+    ? res.json(convos)
+    : res.status(404).json({ message: "convos not found" });
 });
 
-router.post("/message/send", (req, res) => {
-  const { user } = req.body;
-  Message.create({
-    text: String,
-    user: {
-      id,
-      username,
-      email,
-    },
-    send: Date,
-  });
-});
-
-// varsa "logout" kisimina yonlendirecegiz
-// router.get('/logout', (req, res, next) => {
-//   req.session.destroy(() =>{
-//     res.redirect('/')
-//   })
-// })
 
 module.exports = router;
