@@ -14,6 +14,8 @@ router.get("/user/search", (req, res, next) => {
     req.user = User.find((user) => user.id === userId);
   }
   next();
+
+  res.send("User/Search page ");
 });
 
 module.exports = router;
