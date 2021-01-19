@@ -7,6 +7,12 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
   },
+  id: {
+    type: Number,
+  },
+  email: {
+    tyep: String,
+  },
 });
 
 // olusturulan modeli kullanilabilir hale getirmek
