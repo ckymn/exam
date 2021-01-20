@@ -4,11 +4,11 @@ const Auth = require("../models/auth");
 const router = express.Router();
 
 router.get("/register", (req, res) => {
-  res.send("Register Page");
+  res.send("api/auth/register");
 });
 
 router.get("/login", (req, res, next) => {
-  res.send("Login Page");
+  res.send("api/auth/login");
 });
 
 //register
@@ -47,6 +47,7 @@ router.post("/login", (req, res) => {
 
 //logout
 router.get("/logout", (req, res, next) => {
+  res.send("api/auth/logout");
   req.session.destroy(() => {
     res.redirect("/");
   });
