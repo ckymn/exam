@@ -3,12 +3,16 @@ const Auth = require("../models/auth");
 
 const router = express.Router();
 
-router.get("/auth/register", (req, res) => {
+router.get("/register", (req, res) => {
   res.send("Register Page");
 });
 
+router.get("/login", (req, res, next) => {
+  res.send("Login Page");
+});
+
 //register
-router.post("/auth/register", (req, res) => {
+router.post("/register", (req, res) => {
   Auth.create(req.body, (error, user) => {
     _id, username, email;
   });
@@ -21,12 +25,8 @@ router.post("/auth/register", (req, res) => {
   });
 });
 
-router.get("/auth/login", (req, res, next) => {
-  res.send("Login Page");
-});
-
 // login
-router.post("/auth/login", (req, res) => {
+router.post("/login", (req, res) => {
   const { email, password } = req.body;
   Auth.findOne({ email }, (error, user) => {
     if (user) {
@@ -45,11 +45,11 @@ router.post("/auth/login", (req, res) => {
   });
 });
 
-// varsa "logout" kisimina yonlendirecegiz
-// router.get('/logout', (req, res, next) => {
-//   req.session.destroy(() =>{
-//     res.redirect('/')
-//   })
-// })
+//logout
+router.get("/logout", (req, res, next) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+});
 
 module.exports = router;

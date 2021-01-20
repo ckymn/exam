@@ -3,7 +3,7 @@ const Message = require("../models/message");
 
 const router = express.Router();
 
-router.post("/message/send", (req, res) => {
+router.post("/send", (req, res) => {
   const sms = new Message(req.body);
   sms
     .save()
@@ -15,19 +15,16 @@ router.post("/message/send", (req, res) => {
     });
 });
 
-router.get("/message/with_user", (req, res) => {
+router.get("/with_user", (req, res) => {
   const sms = Message.find((data) => data.id === parseInt(req.params.id));
-  sms 
-    ? res.json(sms) 
-    : res.status(404).json({ message: "withUser not found" });
+  sms ? res.json(sms) : res.status(404).json({ message: "withUser not found" });
 });
 
-router.get("/message/convos", (req, res, next) => {
+router.get("/convos", (req, res, next) => {
   const convos = Message.find((data) => data.id === parseInt(req.params.id));
   convos
     ? res.json(convos)
     : res.status(404).json({ message: "convos not found" });
 });
-
 
 module.exports = router;
