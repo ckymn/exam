@@ -30,5 +30,5 @@ const messageGet_with_user = async (req, res) => {
 module.exports = {
   messageGet_send,
   messagePost,
-  messageGet_with_users,
+  messageGet_with_user,
 };

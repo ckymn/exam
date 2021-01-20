@@ -1,56 +1,20 @@
 const express = require("express");
 const Auth = require("../models/auth");
+const {
+  authPost_register,
+  authPost_login,
+  authGet_logout,
+} = require("../controllers/auth");
 
 const router = express.Router();
 
-router.get("/register", (req, res) => {
-  res.send("api/auth/register");
-});
-
-router.get("/login", (req, res, next) => {
-  res.send("api/auth/login");
-});
-
 //register
-router.post("/register", (req, res) => {
-  Auth.create(req.body, (error, user) => {
-    _id, username, email;
-  });
-
-  const token = Auth.jwtToken();
-  console.log(token);
-  res.status(200).json({
-    succes: true,
-    data: Auth,
-  });
-});
+router.post("/register", authPost_register);
 
 // login
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  Auth.findOne({ email }, (error, user) => {
-    if (user) {
-      // bir kullanici var ise
-      if (user.password == password) {
-        // ----->> USER SESSION
-        req.session.userId = user._id; //veritabanindaki _id degerini sessionId degerine kaydetmek
-        res.redirect("/");
-      } else {
-        res.redirect("/auth/login");
-      }
-    } else {
-      // eger kullanici yok ise
-      res.redirect("/auth/register");
-    }
-  });
-});
+router.post("/login", authPost_login);
 
 //logout
-router.get("/logout", (req, res, next) => {
-  res.send("api/auth/logout");
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
-});
+router.get("/logout", authGet_logout);
 
 module.exports = router;
