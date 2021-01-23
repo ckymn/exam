@@ -1,8 +1,21 @@
 const Auth = require("../models/auth");
 
+// kullanici kayit fonksiyonu post request olunca calisacak
 const authPost_register = async (req, res) => {
-  await Auth.create(req.body, (error, user) => {
-    _id, username, email;
+  //POST DATA
+  const username = "Muhammet Cokyaman";
+  const email = "mami@gmail.com";
+  const password = "123455";
+
+  const user = await Auth.create({
+    username,
+    email,
+    password,
+  });
+
+  res.status(400).json({
+    succes: true,
+    data: user,
   });
 
   const token = await Auth.jwtToken();
@@ -13,24 +26,20 @@ const authPost_register = async (req, res) => {
   });
 };
 
-const authPost_login = async (req, res) => {
-  const { email, password } = req.body;
-  await Auth.findOne({ email }, (error, user) => {
-    if (user) {
-      // bir kullanici var ise
-      if (user.password == password) {
-        // ----->> USER SESSION
-        req.session.userId = user._id; //veritabanindaki _id degerini sessionId degerine kaydetmek
-        res.redirect("/");
-      } else {
-        res.redirect("/auth/login");
-      }
+const authPost_login = await Auth.findOne(email, (error, user) => {
+  // bir kullanici var ise
+  if (user) {
+    if (user.password === password) {
+      req.session.userId = user._id;
+      res.redirect("/");
     } else {
-      // eger kullanici yok ise
-      res.redirect("/auth/register");
+      res.redirect("/auth/login");
     }
-  });
-};
+  } else {
+    // eger kullanici yok ise
+    res.redirect("/auth/register");
+  }
+});
 
 const authGet_logout = async (req, res, next) => {
   res.send("api/auth/logout");

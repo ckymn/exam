@@ -2,18 +2,31 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const jwt = require("jsonwebtoken");
 
-// schema olusturulacak dokumanin yapisini belirler
-const AuthSchema = new Schema({
+const AuthUserSchema = new Schema({
   username: {
     type: String,
-    unique: true,
+    require: [true, "username alani zorunlugudur !"],
   },
   email: {
     type: String,
+    require: [true, "email alani zorunludur !"],
     unique: true,
+    match: [
+      /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+      "email standartlarina uygun olmalidir !",
+    ],
+    role: {
+      type: String,
+      default: "user",
+      enum: ["user", "admin"],
+    },
   },
   password: {
     type: String,
+    minlength: [6, "en az 6 karakterli olmalidir"],
+    require: [true, "password alani zorunludur !"],
+    unique: true,
+    select: false,
   },
 });
 
@@ -30,5 +43,6 @@ AuthSchema.jwtToken = function () {
   });
   return token;
 };
-// olusturulan modeli kullanilabilir hale getirmek
-module.exports = mongoose.model("Auth", AuthSchema);
+
+// veri tabaninda AuthUsers adinda bir colleciton olusacak
+module.exports = mongoose.model("AuthUser", AuthUserSchema);

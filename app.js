@@ -1,11 +1,10 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const connectMongoo = require("connect-mongo");
+const connectDb = require("./helpers/connect.db");
 const dotenv = require("dotenv");
 const mainRouter = require("index");
+const customError = require("./middleware/custom.error");
 const app = express();
-const port = 3000;
-const hostname = "127.0.0.1";
+const port = process.env.PORT;
 
 // Env
 dotenv.config({
@@ -13,27 +12,15 @@ dotenv.config({
 });
 
 // DB
-mongoose.connect("mongodb://127.0.0.1/nodeblog_db", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+connectDb();
 
-// ----->> Kullanici Bilgilerini Kaydetme <<-----
-const mongoStore = connectMongoo(expressSession);
-app.use(
-  expressSession({
-    secret: "testotesto",
-    resave: false,
-    saveUninitialized: true,
-    store: new mongoStore({ mongooseConnection: mongoose.connection }), //server yenilense bile biligeri kadeder
-  })
-);
-
-// ---->> Router(yonlendirme) <<----
+//Router
 app.use("/api", mainRouter);
+
+//Error
+app.use(customError);
 
 // --->> Server‘i calitirmak
 app.listen(port, hostname, () => {
-  console.log(`Server Calisiyor , http://${hostname}:${port}/`);
+  console.log(`Server Calisiyor , ${port}`);
 });
